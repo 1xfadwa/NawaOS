@@ -21,7 +21,7 @@ jobs:
       - name: Build Linux kernel
         run: |
           KERNEL_VER="6.6.60"
-          wget -q https://kernel.org{KERNEL_VER}.tar.xz
+          curl -fSL --retry 5 -O https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-${KERNEL_VER}.tar.xz
           tar -xf linux-${KERNEL_VER}.tar.xz
           cd linux-${KERNEL_VER}
           make x86_64_defconfig
@@ -40,7 +40,7 @@ jobs:
       - name: Build BusyBox (static)
         run: |
           BUSYBOX_VER="1.36.1"
-          wget -q https://busybox.net{BUSYBOX_VER}.tar.bz2
+          curl -fSL --retry 5 -O https://busybox.net/downloads/busybox-${BUSYBOX_VER}.tar.bz2
           tar -xf busybox-${BUSYBOX_VER}.tar.bz2
           cd busybox-${BUSYBOX_VER}
           make defconfig
