@@ -1,0 +1,79 @@
+name: Build NawaOS
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libncurses-dev bison flex libssl-dev libelf-dev bc cpio gzip wget xz-utils bzip2
+
+      - name: Build Linux kernel
+        run: |
+          KERNEL_VER="6.6.60"
+          wget -q https://kernel.org{KERNEL_VER}.tar.xz
+          tar -xf linux-${KERNEL_VER}.tar.xz
+          cd linux-${KERNEL_VER}
+          make x86_64_defconfig
+          make -j2 bzImage > ../build.log 2>&1 || {
+            echo "=========== LAST 60 LINES ==========="
+            tail -n 60 ../build.log
+            echo "=========== LINES WITH PROBLEMS ==========="
+            grep -n -i -E "error|undefined|killed|No space|No such file|\*\*\*" ../build.log | head -n 30
+            echo "=========== DISK AND MEMORY ==========="
+            df -h .
+            free -m
+            exit 1
+          }
+          cp arch/x86/boot/bzImage ../bzImage
+
+      - name: Build BusyBox (static)
+        run: |
+          BUSYBOX_VER="1.36.1"
+          wget -q https://busybox.net{BUSYBOX_VER}.tar.bz2
+          tar -xf busybox-${BUSYBOX_VER}.tar.bz2
+          cd busybox-${BUSYBOX_VER}
+          make defconfig
+          sed -i 's/# CONFIG_STATIC is not set/CONFIG_STATIC=y/' .config
+          sed -i 's/CONFIG_TC=y/# CONFIG_TC is not set/' .config
+          make -j$(nproc)
+          make install CONFIG_PREFIX=../rootfs
+
+      - name: Compile custom C commands into /bin
+        run: |
+          mkdir -p rootfs/bin
+          for src in commands/*.c; do
+            if [ -f "$src" ]; then
+              name=$(basename "$src" .c)
+              echo "Building: $name"
+              gcc -static -O2 "$src" -o "rootfs/bin/$name"
+              chmod +x "rootfs/bin/$name"
+            fi
+          done
+
+      - name: Assemble initramfs
+        run: |
+          mkdir -p rootfs/proc rootfs/sys rootfs/dev rootfs/etc rootfs/tmp
+          cp init rootfs/init
+          chmod +x rootfs/init
+          cd rootfs
+          find . -print0 | cpio --null -ov --format=newc | gzip -9 > ../initramfs.cpio.gz
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: NawaOS-x86_64
+          path: |
+            bzImage
+            initramfs.cpio.gz
+

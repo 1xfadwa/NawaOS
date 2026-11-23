@@ -1,0 +1,13 @@
+#!/bin/sh
+mount -t proc none /proc
+mount -t sysfs none /sys
+mount -t devtmpfs none /dev
+# Clear boot logs from the screen befor print -m welcom...
+clear
+echo "      Welcome to NawaOS v1.0       "
+echo "***********************************"
+echo "  Custom Commands Available:"
+echo "  - sysinfo: Show system & RAM info"
+echo -e "  - poweroff -f: Shut down the system\n"
+# Replace PID 1 with an interactive shell to prevent Kernel Panic
+exec /bin/sh
