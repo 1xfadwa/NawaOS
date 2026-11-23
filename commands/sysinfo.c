@@ -6,7 +6,7 @@ int main(){
         struct utsname sys_data;// Structure to store kernel and hardware inf
 	struct sysinfo memo_data;// Structure to store uptime and memory info
 	// Fetch system and memory details directly from the Linux kernel
-	unane(&sys_data);
+	uname(&sys_data);
 	sysinfo(&memo_data);
 	// Convert RAM sizes from Bytes to Megabytes (MB)
 	long total_ram_mb = memo_data.totalram / (1024*1024);
