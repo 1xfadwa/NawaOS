@@ -4,10 +4,10 @@
 
 **A lightweight, custom Linux-based operating system built from scratch using the Linux Kernel, BusyBox, and native C utilities.**
 
-![Build Status](https://shields.io)
-![Kernel](https://shields.io)
-![Language](https://shields.io)
-![License](https://shields.io)
+[![Build Status](https://github.com/1xfadwa/my-linux-os/actions/workflows/build-os.yml/badge.svg)](https://github.com/1xfadwa/my-linux-os/actions)
+![Kernel](https://img.shields.io/badge/Kernel-Linux%206.6.60-blue)
+![Language](https://img.shields.io/badge/Language-C-informational)
+![License](https://img.shields.io/badge/License-GPLv2-green)
 
 </div>
 
