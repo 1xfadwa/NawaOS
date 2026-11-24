@@ -1,6 +1,6 @@
 <div align="center">
 
-#NawaOS
+# NawaOS
 
 **A lightweight, custom Linux-based operating system built from scratch using the Linux Kernel, BusyBox, and native C utilities.**
 
@@ -13,7 +13,7 @@
 
 ---
 
-##Overview
+## Overview
 
 **NawaOS** is a minimal operating system that boots directly in RAM within seconds into a clean, interactive command-line environment. It demonstrates how the Linux kernel interacts with user-space utilities, virtual filesystems (`/proc`, `/sys`, `/dev`), and custom statically compiled C binaries.
 
