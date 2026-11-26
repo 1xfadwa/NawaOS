@@ -8,6 +8,7 @@ echo "      Welcome to NawaOS v1.0       "
 echo "***********************************"
 echo "  Custom Commands Available:"
 echo "  - sysinfo: Show system & RAM info"
+echo "  - cpuinfo: Show processor details"
 echo "  - calc: Built-in calculator (e.g., calc 5 + 3)"
 echo -e "  - poweroff -f: Shut down the system\n"
 # Replace PID 1 with an interactive shell 
